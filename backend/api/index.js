@@ -96,7 +96,7 @@ app.post('/courses/course-details', async (req, res) => {
     res.json(data);
 });
 
-app.post('/get-average-rating', async (req, res) => {
+app.post('/courses/get-average-rating', async (req, res) => {
     const courseName = req.body.name;
     const courseCode = req.body.courseCode;
     let specificDocument;
@@ -109,6 +109,26 @@ app.post('/get-average-rating', async (req, res) => {
     const ratingCount = specificDocument.Course.ratings.ratingCount;
     const averageRating = ratingCount != 0 ? ratingTotal / ratingCount : 0;
     res.json(averageRating);
+});
+
+app.post('/courses/add-rating', async (req, res) => {
+    const courseName = req.body.name;
+    const courseCode = req.body.courseCode;
+    const rating = req.body.rating;
+    if (rating <= 0 || rating > 5 || rating === undefined) {
+        res.status(400).json('Rating must be between 1 and 5');
+    } else {
+        let specificDocument;
+        if (courseName) {
+            specificDocument = await Courses.findOne({'Course.name': courseName})
+        } else if (courseCode) {
+            specificDocument = await Courses.findOne({'Course.courseCode': courseCode})
+        }
+        specificDocument.Course.ratings.ratingTotal += rating;
+        specificDocument.Course.ratings.ratingCount += 1;
+        specificDocument.save();
+        res.json(specificDocument);
+    }
 });
 
 const PORT = 3000;
