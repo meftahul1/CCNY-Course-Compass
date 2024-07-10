@@ -1,6 +1,7 @@
 require('dotenv').config({path: './api/.env'});
 const uri = process.env.MONGO_URI;
 const express = require('express');
+const admin = require('../config/firebaseAdmin.js');
 const Courses = require('../models/courseModel.js');
 const RMP = require('../models/rmpModel.js');
 const cors = require('cors');
@@ -163,6 +164,41 @@ app.post('/rmp-details/', async (req, res) => {
         res.json(rating);
     }
 })
+
+app.post('/register', async (req, res) => {
+    const { email, password } = req.body;
+  
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+  
+    try {
+      const userRecord = await admin.auth().createUser({
+        email: email,
+        password: password,
+      });
+      res.status(201).json({ message: 'User registered successfully', user: userRecord });
+    } catch (error) {
+      res.status(500).json({ message: 'Error registering user', error: error.message });
+    }
+  });
+  
+  app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+  
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+  
+    try {
+      const user = await admin.auth().getUserByEmail(email);
+      const token = await admin.auth().createCustomToken(user.uid);
+      res.status(200).json({ token });
+    } catch (error) {
+      res.status(500).json({ message: 'Error logging in', error: error.message });
+    }
+  });
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
