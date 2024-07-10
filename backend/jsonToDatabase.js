@@ -7,8 +7,8 @@ const Courses = require('./models/courseModel.js');
 const RMP = require('./models/rmpModel.js');
 const allRatings = require('./CCNYProf.json');
 
-//coursesJsonToDatabase();
-rmpJsonToDatabase();
+//coursesJsonToDatabase(); uncommented since not used 
+//rmpJsonToDatabase(); uncommented to prevent duplicate entries
 
 async function rmpJsonToDatabase () {
     
@@ -26,7 +26,7 @@ async function rmpJsonToDatabase () {
             'avgDifficulty': avgDifficulty
         });
         console.log(newRMP);
-        newRMP.save();
+        //newRMP.save(); uncommented to prevent duplicate entries
     }
 }
 

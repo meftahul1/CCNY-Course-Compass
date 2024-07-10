@@ -2,6 +2,7 @@ require('dotenv').config({path: './api/.env'});
 const uri = process.env.MONGO_URI;
 const express = require('express');
 const Courses = require('../models/courseModel.js');
+const RMP = require('../models/rmpModel.js');
 const cors = require('cors');
 const mongoose = require('mongoose');
 mongoose.connect(uri);
@@ -145,6 +146,23 @@ app.get('/average-rating/:courseID', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+app.post('/rmp-details/', async (req, res) => {
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const dbRatings = await RMP.find({});
+    let rating = None
+    dbRatings.forEach(rmp => {
+        if (rmp.firstName == firstName && rmp.lastName == lastName) {
+            rating = rmp;
+        }
+    });
+    if (rating == None) {
+        res.status(404).json({ message: 'Rating not found' });
+    } else {
+        res.json(rating);
+    }
+})
 
 const PORT = 3000;
 app.listen(PORT, () => {
