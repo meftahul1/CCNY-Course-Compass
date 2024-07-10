@@ -96,7 +96,20 @@ app.post('/courses/course-details', async (req, res) => {
     res.json(data);
 });
 
-app.post('/')
+app.post('/get-average-rating', async (req, res) => {
+    const courseName = req.body.name;
+    const courseCode = req.body.courseCode;
+    let specificDocument;
+    if (courseName) {
+        specificDocument = await Courses.findOne({'Course.name': courseName})
+    } else if (courseCode) {
+        specificDocument = await Courses.findOne({'Course.courseCode': courseCode})
+    }
+    const ratingTotal = specificDocument.Course.ratings.ratingTotal;
+    const ratingCount = specificDocument.Course.ratings.ratingCount;
+    const averageRating = ratingCount != 0 ? ratingTotal / ratingCount : 0;
+    res.json(averageRating);
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {
