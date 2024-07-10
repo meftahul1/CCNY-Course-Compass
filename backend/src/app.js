@@ -1,12 +1,10 @@
 const express = require('express');
 const Courses = require('../models/courseModel.js');
 const cors = require('cors');
-const allCourses = require('../Fall24Courses.json');
 
 const mongoose = require('mongoose');
 const uri = process.env.uri
 mongoose.connect(uri);
-jsonToDatabase();
 
 const app = express();
 
@@ -158,61 +156,6 @@ app.listen(PORT, () => {
 
 module.exports = app;
 
-function formatCourseData(course) {
-    const courseName = course['name'] || 'Not Available';
-    const status = course['status'] || 'Not Available';
-    const courseCode = course['courseCode'] || 'Not Available';
-    const credits = course['credits'] || 0;
-    const enrollmentPeriod = course['enrollmentPeriod'] || 'Not Available';
-    const dayTime = course['dayTime'] || 'Not Available';
-    const room = course['room'] || 'Not Available';
-    const instructor = course['instructor'] || 'Not Available';
-    const description = course['description'] || 'Not Available';
-
-    return {
-        'name': courseName,
-        'status': status,
-        'courseCode': courseCode,
-        'credits': credits,
-        'enrollmentPeriod': enrollmentPeriod,
-        'dayTime': dayTime,
-        'room': room,
-        'instructor': instructor,
-        'description': description
-    };
-}
-
-function updateCourseData(course, updates) {
-    if (updates['name']) {
-        course['name'] = updates['name'];
-    }
-    if (updates['status']) {
-        course['status'] = updates['status'];
-    }
-    if (updates['courseCode']) {
-        course['courseCode'] = updates['courseCode'];
-    }
-    if (updates['credits']) {
-        course['credits'] = updates['credits'];
-    }
-    if (updates['enrollmentPeriod']) {
-        course['enrollmentPeriod'] = updates['enrollmentPeriod'];
-    }
-    if (updates['dayTime']) {
-        course['dayTime'] = updates['dayTime'];
-    }
-    if (updates['room']) {
-        course['room'] = updates['room'];
-    }
-    if (updates['instructor']) {
-        course['instructor'] = updates['instructor'];
-    }
-    if (updates['description']) {
-        course['description'] = updates['description'];
-    }
-    return course;
-}
-
 async function findRelatedCourses(name) {
     const relatedCourses = [];
     const dbCourses = await Courses.find({});
@@ -222,40 +165,4 @@ async function findRelatedCourses(name) {
         }
     });
     return relatedCourses;
-}
-
-async function jsonToDatabase () {
-    const dbCourses = await Courses.find({});
-    dbCourseNames = [];
-    dbCourses.forEach(course => {
-        dbCourseNames.push(course.Course['name'])
-    });
-
-    for (const key in allCourses['Name']) {
-        if (dbCourseNames.includes(allCourses['Name'][key])) {
-            console.log(`${allCourses['Name'][key]} already exists in the database`)
-            continue;
-        } 
-        else {
-            const course = {
-                'name': allCourses['Name'][key],
-                'status': allCourses['Status'][key],
-                'courseCode': allCourses['Course Code'][key],
-                'credits': allCourses['Credits'][key],
-                'enrollmentPeriod': allCourses['Enrollment Period'][key],
-                'dayTime': allCourses['Day Time'][key],
-                'room': allCourses['Room'][key],
-                'instructor': allCourses['Instructor'][key],
-                'description': allCourses['Description'][key],
-                'ratings': {
-                    'ratingTotal': 0,
-                    'ratingCount': 0
-                }
-            };
-            const newCourse = new Courses({
-                'Course': course
-            });
-            newCourse.save();
-        }
-    }
 }

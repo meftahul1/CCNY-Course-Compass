@@ -264,8 +264,8 @@ app.post('/register', async (req, res) => {
   
     try {
       const user = await admin.auth().getUserByEmail(email);
-      const token = await admin.auth().createCustomToken(user.uid);
-      res.status(200).json({ token });
+      const userID = user.uid;
+      res.status(200).json({ userID });
     } catch (error) {
       res.status(500).json({ message: 'Error logging in', error: error.message });
     }
