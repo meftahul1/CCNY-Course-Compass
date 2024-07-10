@@ -96,7 +96,62 @@ app.post('/courses/course-details', async (req, res) => {
     res.json(data);
 });
 
-app.post('/')
+app.post('/add-rating/:courseID', async (req, res) => {
+    const courseID = req.params.courseID;
+    const newRating = req.body.rating; 
+
+    if (newRating == null) {
+        return res.status(400).json({ message: 'Rating is required' });
+    }
+
+    try {
+        const course = await Courses.findById(courseID);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        const { ratingTotal, ratingCount } = course.Course.ratings;
+
+        
+        const updatedRatingTotal = ratingTotal + newRating;
+        const updatedRatingCount = ratingCount + 1;
+
+        course.Course.ratings.ratingTotal = updatedRatingTotal;
+        course.Course.ratings.ratingCount = updatedRatingCount;
+
+        await course.save();
+        res.status(200).json({ message: 'Rating added' });
+        
+    } catch (error) {
+        console.error('Error calculating average rating:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+app.get('/average-rating/:courseID', async (req, res) => {
+    const courseID = req.params.courseID;
+
+    try {
+        const course = await Courses.findById(courseID);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        const { ratingTotal, ratingCount } = course.Course.ratings;
+
+        if (ratingCount === 0) {
+            return res.status(400).json({ message: 'No ratings available for this course' });
+        }
+
+        const averageRating = ratingTotal / ratingCount;
+
+        res.status(200).json({ averageRating });
+    } catch (error) {
+        console.error('Error calculating average rating:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {
