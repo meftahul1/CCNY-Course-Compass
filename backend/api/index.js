@@ -96,38 +96,60 @@ app.post('/courses/course-details', async (req, res) => {
     res.json(data);
 });
 
-app.post('/courses/get-average-rating', async (req, res) => {
-    const courseName = req.body.name;
-    const courseCode = req.body.courseCode;
-    let specificDocument;
-    if (courseName) {
-        specificDocument = await Courses.findOne({'Course.name': courseName})
-    } else if (courseCode) {
-        specificDocument = await Courses.findOne({'Course.courseCode': courseCode})
+app.post('/add-rating/:courseID', async (req, res) => {
+    const courseID = req.params.courseID;
+    const newRating = req.body.rating; 
+
+    if (newRating == null) {
+        return res.status(400).json({ message: 'Rating is required' });
     }
-    const ratingTotal = specificDocument.Course.ratings.ratingTotal;
-    const ratingCount = specificDocument.Course.ratings.ratingCount;
-    const averageRating = ratingCount != 0 ? ratingTotal / ratingCount : 0;
-    res.json(averageRating);
+
+    try {
+        const course = await Courses.findById(courseID);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        const { ratingTotal, ratingCount } = course.Course.ratings;
+
+        
+        const updatedRatingTotal = ratingTotal + newRating;
+        const updatedRatingCount = ratingCount + 1;
+
+        course.Course.ratings.ratingTotal = updatedRatingTotal;
+        course.Course.ratings.ratingCount = updatedRatingCount;
+
+        await course.save();
+        res.status(200).json({ message: 'Rating added' });
+        
+    } catch (error) {
+        console.error('Error calculating average rating:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
-app.post('/courses/add-rating', async (req, res) => {
-    const courseName = req.body.name;
-    const courseCode = req.body.courseCode;
-    const rating = req.body.rating;
-    if (rating <= 0 || rating > 5 || rating === undefined) {
-        res.status(400).json('Rating must be between 1 and 5');
-    } else {
-        let specificDocument;
-        if (courseName) {
-            specificDocument = await Courses.findOne({'Course.name': courseName})
-        } else if (courseCode) {
-            specificDocument = await Courses.findOne({'Course.courseCode': courseCode})
+
+app.get('/average-rating/:courseID', async (req, res) => {
+    const courseID = req.params.courseID;
+
+    try {
+        const course = await Courses.findById(courseID);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
         }
-        specificDocument.Course.ratings.ratingTotal += rating;
-        specificDocument.Course.ratings.ratingCount += 1;
-        specificDocument.save();
-        res.json(specificDocument);
+
+        const { ratingTotal, ratingCount } = course.Course.ratings;
+
+        if (ratingCount === 0) {
+            return res.status(400).json({ message: 'No ratings available for this course' });
+        }
+
+        const averageRating = ratingTotal / ratingCount;
+
+        res.status(200).json({ averageRating });
+    } catch (error) {
+        console.error('Error calculating average rating:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
