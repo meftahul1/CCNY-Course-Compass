@@ -3,15 +3,8 @@ const uri = process.env.MONGO_URI;
 const express = require('express');
 const Courses = require('../models/courseModel.js');
 const cors = require('cors');
-const allCourses = require('../Fall24Courses.json');
 const mongoose = require('mongoose');
-mongoose.connect(uri)
-.then(() => {
-    jsonToDatabase();
-})
-.catch((err) => {
-    console.log(err);
-});
+mongoose.connect(uri);
 
 const app = express();
 
@@ -169,41 +162,4 @@ async function findRelatedCourses(name) {
         }
     });
     return relatedCourses;
-}
-
-async function jsonToDatabase () {
-    const dbCourses = await Courses.find();
-    dbCourseNames = [];
-    dbCourses.forEach(course => {
-        dbCourseNames.push(course.Course['name'])
-    });
-
-    for (const key in allCourses['Name']) {
-        if (dbCourseNames.includes(allCourses['Name'][key])) {
-            console.log(`${allCourses['Name'][key]} already exists in the database`)
-            continue;
-        } 
-        else {
-            const course = {
-                'name': allCourses['Name'][key],
-                'status': allCourses['Status'][key],
-                'courseCode': allCourses['Course Code'][key],
-                'credits': allCourses['Credits'][key],
-                'enrollmentPeriod': allCourses['Enrollment Period'][key],
-                'dayTime': allCourses['Day Time'][key],
-                'room': allCourses['Room'][key],
-                'instructor': allCourses['Instructor'][key],
-                'description': allCourses['Description'][key],
-                'ratings': {
-                    'ratingTotal': 0,
-                    'ratingCount': 0
-                }
-            };
-            const newCourse = new Courses({
-                'Course': course
-            });
-            console.log(newCourse);
-            newCourse.save();
-        }
-    }
 }
