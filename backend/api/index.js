@@ -81,13 +81,13 @@ app.get('/courses', async(req, res) => {
     res.json(courses);
 });*/
 
-app.get('/courses/:courseID', async (req, res) => {
+app.get('/:courseID', async (req, res) => {
     const courseID = req.params.courseID;
     const course = await Courses.findOne({'Course._id': courseID});
     res.json(course);
 });
 
-app.post('/courses/course-details', async (req, res) => {
+app.post('/course-details', async (req, res) => {
     const name = req.body.name;
     const courses = await findRelatedCourses(name);
     const data = Object.assign({}, courses)
