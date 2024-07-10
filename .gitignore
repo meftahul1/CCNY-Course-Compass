@@ -3,3 +3,5 @@ node_modules/
 next-env.d.ts
 *.rest
 .env
+# Firebase service account key
+serviceAccountKey.json
