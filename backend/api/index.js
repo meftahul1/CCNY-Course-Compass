@@ -81,7 +81,7 @@ app.get('/courses', async(req, res) => {
     res.json(courses);
 });*/
 
-app.get('/:courseID', async (req, res) => {
+app.get('/courses/:courseID', async (req, res) => {
     const courseID = req.params.courseID;
     const course = await Courses.findOne({'Course._id': courseID});
     res.json(course);
@@ -90,8 +90,8 @@ app.get('/:courseID', async (req, res) => {
 app.post('/course-details', async (req, res) => {
     const name = req.body.name;
     const courses = await findRelatedCourses(name);
-    const data = Object.assign({}, courses)
-    res.json(data);
+    //const data = Object.assign({}, courses)
+    res.json(courses);
 });
 
 app.post('/add-rating/:courseID', async (req, res) => {
@@ -305,7 +305,7 @@ app.get('/get-messages/:courseID', async (req, res) => {
     return res.status(200).json(chat.messages);
 });
 
-const PORT = 3000;
+const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 })
