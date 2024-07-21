@@ -3,10 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import {
-    getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider,
-    signOut
-} from "firebase/auth";
 
 
 
@@ -36,7 +32,7 @@ const Nav = () => {
                         Add Course
                     </Link>
 
-                    <button type="button" className="outline_btn" onClick={signOut}>Sign Out</button>
+                    <button type="button" className="outline_btn">Sign Out</button>
                     <Link href="/profile">
                         <Image src="/assets/images/logo.svg" width={37} height={37} className="rounded-full" alt="profile"></Image>
                     </Link>
@@ -44,7 +40,8 @@ const Nav = () => {
             ): (
                 <>
                     
-                    <Link href="/create-account" className="black_btn">
+                    {/* <Link href="/create-account" className="black_btn"> */}
+                    <Link href="/schedule" className="black_btn">
                         Join Now
                     </Link>
                 </>
@@ -86,7 +83,7 @@ const Nav = () => {
                 </div>
             ) : ( //this is when the user is not logged in
                 <>
-                   <Link href="/register" className="black_btn">
+                   <Link href="/create-account" className="black_btn">
                         Join Now
                     </Link>
                 </>

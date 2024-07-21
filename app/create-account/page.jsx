@@ -1,7 +1,39 @@
 "use client";
-import React from 'react'
+import React, { useState } from 'react'
+
 
 const Register = () => {
+
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+          const response = await fetch('http://localhost:4000/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, email, password })
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setSuccess(data.message);
+            // Handle successful registration (e.g., redirect to login page)
+          } else {
+            const errorData = await response.json();
+            setError(errorData.message);
+          }
+        } catch (error) {
+          setError('An error occurred. Please try again.');
+        }
+      };
+      
+
     return (
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -11,21 +43,46 @@ const Register = () => {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form className="space-y-6" action="#" method="POST">
+                {error && <p className="text-center text-red-500">{error}</p>}
+                {success && <p className="text-center text-green-500">{success}</p>}
+                <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
-                    <label for="email" className="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                    <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">Username</label>
                     <div className="mt-2">
-                    <input id="email" name="email" type="email" autocomplete="email" required className=" block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                    <input id="username" name="username" type="text" 
+                    required 
+                    className=" block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    value={username} onChange={(e) => setUsername(e.target.value)}
+                    />
+                    
+                    </div>
+                </div>
+
+                <div>
+                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                    <div className="mt-2">
+                    <input id="email" name="email" type="email"
+                    required 
+                    className=" block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    value={email} onChange={(e) => setEmail(e.target.value)}
+                    />
                     </div>
                 </div>
 
                 <div>
                     <div className="flex items-center justify-between">
-                    <label for="password" className="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                    <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">Password</label>
             
                     </div>
                     <div className="mt-2">
-                    <input id="password" name="password" type="password" autocomplete="current-password" required className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+                    <input 
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    onChange={(e) => setPassword(e.target.value)}
+                    />
                     </div>
                 </div>
 
