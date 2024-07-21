@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 
 const Nav = () => {
 
-    const isUserLoggedIn = false;
+    const isUserLoggedIn = true;
     const [toggleDropdown, setToggleDropdown] = useState(false);
 
 
@@ -18,7 +18,7 @@ const Nav = () => {
   return (
     <nav className="flex-between w-full my-16 pt-3">
          <Link href="/" className="flex gap-2 flex-center">
-            <img className="object-contain" src="/assets/images/logo.svg" alt="logo"
+            <img className="object-contain" src="/assets/icons/icon.png" alt="logo"
                 width={30} height={30}
              />
              <p className="logo_text">Course Compass @ CCNY</p>
@@ -28,20 +28,20 @@ const Nav = () => {
         <div className="sm:flex hidden">
             {isUserLoggedIn ? (
                 <div className="flex gap-3 md:gap-5">
-                    <Link href="/create-prompt" className="black_btn">
+                    <Link href="/schedule" className="black_btn">
                         Add Course
                     </Link>
 
                     <button type="button" className="outline_btn">Sign Out</button>
                     <Link href="/profile">
-                        <Image src="/assets/images/logo.svg" width={37} height={37} className="rounded-full" alt="profile"></Image>
+                        <Image src="/assets/icons/profile_1.svg" width={37} height={37} className="rounded-full" alt="profile"></Image>
                     </Link>
                 </div>
             ): (
                 <>
                     
                     {/* <Link href="/create-account" className="black_btn"> */}
-                    <Link href="/schedule" className="black_btn">
+                    <Link href="/create-account" className="black_btn">
                         Join Now
                     </Link>
                 </>
@@ -53,7 +53,7 @@ const Nav = () => {
             {isUserLoggedIn ? (
                 <div className="flex">
                     {/* <button type="button" className="outline_btn" onClick={signOut}>Sign Out</button> */}
-                    <Image src="/assets/images/logo.svg" width={37} height={37} className="rounded-full" alt="profile"
+                    <Image src="/assets/icons/profile_1.svg" width={37} height={37} className="rounded-full" alt="profile"
                             onClick={
                                 () => setToggleDropdown((prev) => !prev)
                             }

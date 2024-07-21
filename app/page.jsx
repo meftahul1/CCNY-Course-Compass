@@ -8,7 +8,7 @@ export default function Home() {
         <span className="blue_gradient text-center pt-8 mt-4">Courses, Course Mates and Many More!</span>
       </h1>
       <p className="desc text-center">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas veniam vitae expedita amet eaque ea iure error dicta architecto aliquam dignissimos maiores exercitationem, deleniti officia consequatur aspernatur? Dolor, nihil repellendus?
+        Learn more about your courses and connect with your classmates with our platform. Dive into detailed course information, track your progress and engage with fellow students to enhance your learning experience and build valuable connections
       </p>
 
       <Feed />

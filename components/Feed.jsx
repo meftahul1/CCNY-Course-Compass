@@ -11,37 +11,37 @@ const Feed = () => {
           <div className='p-6 hover:scale-105 ease-in duration-300'>
             <div className='flex flex-col items-center justify-center'>
               <h3 className='mt-4 font-bold text-center'>Courses</h3>
-              <p className='text-gray-500 text-sm text-center hidden sm:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <p className='text-gray-500 text-sm text-center hidden sm:block mt-2'>Find information on courses, professors teaching the course and many more</p>
             </div>
           </div>
             <div className='p-6 hover:scale-105 ease-in duration-300'>
               <div className='flex flex-col items-center justify-center'>
                 <h3 className='mt-4 font-bold text-center'>Chat</h3>
-                <p className='text-gray-500 text-sm text-center hidden sm:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className='text-gray-500 text-sm text-center hidden sm:block mt-2'>Real-time chat system to keep you connected and informed</p>
               </div>
             </div>
             <div className='p-6 hover:scale-105 ease-in duration-300'>
               <div className='flex flex-col items-center justify-center'>
                 <h3 className='mt-4 font-bold text-center'>Professor Ratings</h3>
-                <p className='text-gray-500 text-sm text-center hidden sm:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className='text-gray-500 text-sm text-center hidden sm:block mt-2'>Avoid the hassle of switching between CUNYFirst and Rate My Professors.</p>
               </div>
             </div>
             <div className='p-6 hover:scale-105 ease-in duration-300'>
               <div className='flex flex-col items-center justify-center'>
                 <h3 className='mt-4 font-bold text-center'>Course Ratings</h3>
-                <p className='text-gray-500 text-sm text-center hidden sm:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className='text-gray-500 text-sm text-center hidden sm:block mt-2'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
               </div>
             </div>
             <div className='p-6 hover:scale-105 ease-in duration-300'>
               <div className='flex flex-col items-center justify-center'>
                 <h3 className='mt-4 font-bold text-center'>Textbooks</h3>
-                <p className='text-gray-500 text-sm text-center hidden sm:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className='text-gray-500 text-sm text-center hidden sm:block mt-2'>Find Links to textbooks required for your course</p>
               </div>
             </div>
             <div className='p-6 hover:scale-105 ease-in duration-300'>
               <div className='flex flex-col items-center justify-center'>
                 <h3 className='mt-4 font-bold text-center'>Courses</h3>
-                <p className='text-gray-500 text-sm text-center hidden sm:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className='text-gray-500 text-sm text-center hidden sm:block mt-2'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
               </div>
             </div>
           </div>

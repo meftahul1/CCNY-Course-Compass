@@ -131,7 +131,7 @@ export default function Page() {
       </label>
 
       {searchData.length > 0 && (
-        <ul className="absolute z-10 w-full max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg">
+        <ul className="absolute z-10 w-30 max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg transition-transform duration-300 ease-in-out transform scale-95 hover:scale-100 mt-1">
           {searchData.map(course => (
             <li
               key={course._id}
