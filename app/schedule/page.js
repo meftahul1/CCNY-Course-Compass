@@ -8,7 +8,7 @@ const truncateText = (text, wordLimit) => {
   return `${words.slice(0, wordLimit).join(' ')}...`;
 };
 
-const CourseCard = ({ course, handleRemoveCourse }) => {
+const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const wordLimit = 30;
 
@@ -22,7 +22,9 @@ const CourseCard = ({ course, handleRemoveCourse }) => {
           </div>
         </div>
         <div className="flex flex-col justify-center items-center gap-2.5 w-12 h-12 ml-auto">
-          <div className="flex justify-center items-center p-2 rounded-full border border-[#ffffff] transition duration-300 hover:opacity-75 cursor-pointer">
+          <div className="flex justify-center items-center p-2 rounded-full border border-[#ffffff] transition duration-300 hover:opacity-75 cursor-pointer"
+               onClick={() => handleShowModal(course)}
+          >
             <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 20C11.45 20 10.9792 19.8042 10.5875 19.4125C10.1958 19.0208 10 18.55 10 18C10 17.45 10.1958 16.9792 10.5875 16.5875C10.9792 16.1958 11.45 16 12 16C12.55 16 13.0208 16.1958 13.4125 16.5875C13.8042 16.9792 14 17.45 14 18C14 18.55 13.8042 19.0208 13.4125 19.4125C13.0208 19.8042 12.55 20 12 20ZM12 14C11.45 14 10.9792 13.8042 10.5875 13.4125C10.1958 13.0208 10 12.55 10 12C10 11.45 10.1958 10.9792 10.5875 10.5875C10.9792 10.1958 11.45 10 12 10C12.55 10 13.0208 10.1958 13.4125 10.5875C13.8042 10.9792 14 11.45 14 12C14 12.55 13.8042 13.0208 13.4125 13.4125C13.0208 13.8042 12.55 14 12 14ZM12 8C11.45 8 10.9792 7.80417 10.5875 7.4125C10.1958 7.02083 10 6.55 10 6C10 5.45 10.1958 4.97917 10.5875 4.5875C10.9792 4.19583 11.45 4 12 4C12.55 4 13.0208 4.19583 13.4125 4.5875C13.8042 4.97917 14 5.45 14 6C14 6.55 13.8042 7.02083 13.4125 7.4125C13.0208 7.80417 12.55 8 12 8Z" fill="#49454F" />
             </svg>
@@ -85,8 +87,8 @@ export default function Page() {
   const apiPath = "http://localhost:4000/";
   const [courseSearch, setCourseSearch] = useState('');
   const [searchData, setSearchData] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedCourses, setSelectedCourses] = useState([]);
   const [modalData, setModalData] = useState(null);
 
   useEffect(() => {
@@ -117,13 +119,14 @@ export default function Page() {
 
   return (
     <>
-      <label className="block mb-4 text-sm font-medium text-gray-900">
-        Enter Course Name to Get Started
+      <label className="block mb-8 text-sm font-medium text-gray-900">
+        <h1 className="font-bold text-xl">Enter Course Name to Get Started</h1>
         <input
           type="text"
+          placeholder="i.e  ANTH101"
           value={courseSearch}
           onChange={(e) => setCourseSearch(e.target.value)}
-          className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          className="mt-8 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </label>
 
@@ -144,12 +147,36 @@ export default function Page() {
       <div className="flex flex-wrap gap-4 p-4">
         {selectedCourses.length > 0 ? (
           selectedCourses.map(course => (
-            <CourseCard key={course._id} course={course} handleRemoveCourse={handleRemoveCourse} />
+            <CourseCard
+              key={course._id}
+              course={course}
+              handleRemoveCourse={handleRemoveCourse}
+              handleShowModal={handleShowModal}
+            />
           ))
         ) : (
           <p>No courses selected.</p>
         )}
       </div>
+
+      {showModal && modalData && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
+          <div className="bg-white p-6 rounded-md shadow-lg">
+            <h2 className="text-lg font-bold">{modalData.name}</h2>
+            <p><strong>Status: </strong>{modalData.status}</p>
+            <p><strong>Course Credits: </strong>{modalData.credits}</p>
+            <p><strong>Enrollment Period: </strong>{modalData.enrollmentPeriod}</p>
+            <p><strong>Instructor: </strong>{modalData.instructor}</p>
+            <p><strong>Ratings: </strong>{modalData.ratings.ratingTotal} (Total Ratings: {modalData.ratings.ratingCount})</p>
+            <button
+              onClick={handleCloseModal}
+              className="mt-4 px-4 py-2 bg-[#65558f] text-white rounded-md"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
