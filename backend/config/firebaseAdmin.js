@@ -1,6 +1,8 @@
 const admin = require('firebase-admin');
 require('dotenv').config({path: './config/.env'});
 
+
+
 const serviceAccount = {
     "type": "service_account",
     "project_id": "csc318-finalproject-logindb",
