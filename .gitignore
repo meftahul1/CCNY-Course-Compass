@@ -5,3 +5,10 @@ next-env.d.ts
 .env
 # Firebase service account key
 serviceAccountKey.json
+
+.idea/
+# Default ignored files
+/shelf/
+/workspace.xml
+
+.DS_Store
