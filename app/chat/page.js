@@ -1,5 +1,6 @@
 "use client"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios'
 import './chat.css';
 
 const dummyCourses = [
@@ -21,37 +22,74 @@ const dummyMessages = {
   ]
 };
 
-const GroupChat = () => {
-  const [selectedCourse, setSelectedCourse] = useState(dummyCourses[0].id);
-  const [messages, setMessages] = useState(dummyMessages[selectedCourse]);
-  const [newMessage, setNewMessage] = useState('');
-  const [courseSearch, setCourseSearch] = useState('');
-  const [searchResults, setSearchResults] = useState(dummyCourses);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [file, setFile] = useState(null);
 
+const GroupChat = () => {
+
+    const [selectedCourse, setSelectedCourse] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const [courseSearch, setCourseSearch] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [file, setFile] = useState(null);
+
+  // Fetch courses from the backend
+  useEffect(() => {
+    axios.get('/courses')
+      .then(response => {
+        setSearchResults(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching courses:', error);
+      });
+  }, []);
+
+  // Fetch messages for the selected course from the backend
+  useEffect(() => {
+    if (selectedCourse) {
+      axios.get(`/get-messages/${selectedCourse}`)
+        .then(response => {
+          setMessages(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching messages:', error);
+        });
+    }
+  }, [selectedCourse]);
+
+  // Filter courses based on search input
   useEffect(() => {
     if (courseSearch.trim() !== '') {
-      const results = dummyCourses.filter(course =>
+      const results = searchResults.filter(course =>
         course.name.toLowerCase().includes(courseSearch.toLowerCase())
       );
       setSearchResults(results);
     } else {
-      setSearchResults(dummyCourses);
+      axios.get('/courses')
+        .then(response => {
+          setSearchResults(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+        });
     }
   }, [courseSearch]);
 
   const handleCourseClick = (courseId) => {
     setSelectedCourse(courseId);
-    setMessages(dummyMessages[courseId]);
   };
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
-      const updatedMessages = [...messages, { user: 'John', message: newMessage, sender: 'me' }];
-      setMessages(updatedMessages);
-      dummyMessages[selectedCourse] = updatedMessages; // Update dummy data
-      setNewMessage('');
+      const messageData = { username: 'John', message: newMessage, courseID: selectedCourse };
+      axios.post('/add-message', messageData)
+        .then(response => {
+          setMessages([...messages, response.data]);
+          setNewMessage('');
+        })
+        .catch(error => {
+          console.error('Error sending message:', error);
+        });
     }
   };
 
@@ -62,11 +100,16 @@ const GroupChat = () => {
   };
 
   const handleDeleteChat = () => {
-    delete dummyMessages[selectedCourse];
-    setMessages([]);
-    setSearchResults(searchResults.filter(course => course.id !== selectedCourse));
-    setSelectedCourse(null);
-    setShowDropdown(false);
+    axios.delete(`/delete-user-course/${selectedCourse}`)
+      .then(() => {
+        setMessages([]);
+        setSearchResults(searchResults.filter(course => course.id !== selectedCourse));
+        setSelectedCourse(null);
+        setShowDropdown(false);
+      })
+      .catch(error => {
+        console.error('Error deleting chat:', error);
+      });
   };
 
   const handleFileChange = (event) => {
@@ -75,13 +118,22 @@ const GroupChat = () => {
 
   const handleUpload = () => {
     if (file) {
-      console.log('File uploaded:', file.name);
-      setFile(null);
+      const formData = new FormData();
+      formData.append('file', file);
+
+      axios.post(`/api/courses/${selectedCourse}/upload`, formData)
+        .then(response => {
+          console.log('File uploaded:', response.data);
+          setFile(null);
+        })
+        .catch(error => {
+          console.error('Error uploading file:', error);
+        });
     }
   };
 
   const getSelectedCourseName = () => {
-    const course = dummyCourses.find(course => course.id === selectedCourse);
+    const course = searchResults.find(course => course._id === selectedCourse);
     return course ? course.name : 'No Course Selected';
   };
 
@@ -89,8 +141,8 @@ const GroupChat = () => {
     <div className="chat-container">
       <div className="course-list">
         <div className="logo-container">
-          <img src="/assets/icons/icon.png" alt="Course Compass @ CCNY" className="logo" />
-          <h3 className="logo-text">Course Compass @ CCNY</h3>
+          {/* <img src="/assets/icons/icon.png" alt="Course Compass @ CCNY" className="logo" /> */}
+          <h3 className="logo-text">Course Compass</h3>
         </div>
         <input
           type="text"
