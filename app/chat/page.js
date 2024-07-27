@@ -3,24 +3,24 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios'
 import './chat.css';
 
-const dummyCourses = [
-  { id: 1, name: 'Anthropology 101' },
-  { id: 2, name: 'Biology 101' },
-  { id: 3, name: 'Chemistry 101' }
-];
+// const dummyCourses = [
+//   { id: 1, name: 'Anthropology 101' },
+//   { id: 2, name: 'Biology 101' },
+//   { id: 3, name: 'Chemistry 101' }
+// ];
 
-const dummyMessages = {
-  1: [
-    { user: 'John', message: 'Hello everyone!', sender: 'me' },
-    { user: 'Doe', message: 'Hi John!', sender: 'other' }
-  ],
-  2: [
-    { user: 'Jane', message: 'Hello everyone!', sender: 'other' }
-  ],
-  3: [
-    { user: 'David', message: 'Hello everyone!', sender: 'other' }
-  ]
-};
+// const dummyMessages = {
+//   1: [
+//     { user: 'John', message: 'Hello everyone!', sender: 'me' },
+//     { user: 'Doe', message: 'Hi John!', sender: 'other' }
+//   ],
+//   2: [
+//     { user: 'Jane', message: 'Hello everyone!', sender: 'other' }
+//   ],
+//   3: [
+//     { user: 'David', message: 'Hello everyone!', sender: 'other' }
+//   ]
+// };
 
 
 const GroupChat = () => {
@@ -166,7 +166,7 @@ const GroupChat = () => {
       <div className="chat-area">
         <div className="chat-header">
           <div className="chat-title">
-            <h3>{getSelectedCourseName()} Chat</h3>
+            <h3>{getSelectedCourseName()}</h3>
             <button onClick={() => setShowDropdown(!showDropdown)} className="dropdown-btn">
               ...
             </button>
