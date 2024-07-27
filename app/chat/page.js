@@ -1,79 +1,29 @@
-"use client"
-import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios'
+"use client";
+import { useState, useEffect } from 'react';
 import './chat.css';
 
-// const dummyCourses = [
-//   { id: 1, name: 'Anthropology 101' },
-//   { id: 2, name: 'Biology 101' },
-//   { id: 3, name: 'Chemistry 101' }
-// ];
-
-// const dummyMessages = {
-//   1: [
-//     { user: 'John', message: 'Hello everyone!', sender: 'me' },
-//     { user: 'Doe', message: 'Hi John!', sender: 'other' }
-//   ],
-//   2: [
-//     { user: 'Jane', message: 'Hello everyone!', sender: 'other' }
-//   ],
-//   3: [
-//     { user: 'David', message: 'Hello everyone!', sender: 'other' }
-//   ]
-// };
-
-
 const GroupChat = () => {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [courseSearch, setCourseSearch] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [file, setFile] = useState(null);
 
-    const [selectedCourse, setSelectedCourse] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState('');
-    const [courseSearch, setCourseSearch] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [file, setFile] = useState(null);
-
-  // Fetch courses from the backend
   useEffect(() => {
-    axios.get('/courses')
-      .then(response => {
-        setSearchResults(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching courses:', error);
-      });
+    const joinedCourses = JSON.parse(localStorage.getItem('joinedCourses')) || [];
+    setSearchResults(joinedCourses);
   }, []);
 
-  // Fetch messages for the selected course from the backend
   useEffect(() => {
     if (selectedCourse) {
-      axios.get(`/get-messages/${selectedCourse}`)
-        .then(response => {
-          setMessages(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching messages:', error);
-        });
+      fetch(`http://localhost:4000/get-messages/${selectedCourse}`)
+        .then(response => response.json())
+        .then(data => setMessages(data))
+        .catch(error => console.error('Error fetching messages:', error));
     }
   }, [selectedCourse]);
-
-  // Filter courses based on search input
-  useEffect(() => {
-    if (courseSearch.trim() !== '') {
-      const results = searchResults.filter(course =>
-        course.name.toLowerCase().includes(courseSearch.toLowerCase())
-      );
-      setSearchResults(results);
-    } else {
-      axios.get('/courses')
-        .then(response => {
-          setSearchResults(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching courses:', error);
-        });
-    }
-  }, [courseSearch]);
 
   const handleCourseClick = (courseId) => {
     setSelectedCourse(courseId);
@@ -82,14 +32,19 @@ const GroupChat = () => {
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       const messageData = { username: 'John', message: newMessage, courseID: selectedCourse };
-      axios.post('/add-message', messageData)
-        .then(response => {
-          setMessages([...messages, response.data]);
+      fetch('http://localhost:4000/add-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(messageData),
+      })
+        .then(response => response.json())
+        .then(data => {
+          setMessages([...messages, data]);
           setNewMessage('');
         })
-        .catch(error => {
-          console.error('Error sending message:', error);
-        });
+        .catch(error => console.error('Error sending message:', error));
     }
   };
 
@@ -100,16 +55,20 @@ const GroupChat = () => {
   };
 
   const handleDeleteChat = () => {
-    axios.delete(`/delete-user-course/${selectedCourse}`)
+    fetch(`http://localhost:4000/delete-user-course/${selectedCourse}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userID: 'your_user_id' }), // Update userID accordingly
+    })
       .then(() => {
         setMessages([]);
-        setSearchResults(searchResults.filter(course => course.id !== selectedCourse));
+        setSearchResults(searchResults.filter(course => course._id !== selectedCourse));
         setSelectedCourse(null);
         setShowDropdown(false);
       })
-      .catch(error => {
-        console.error('Error deleting chat:', error);
-      });
+      .catch(error => console.error('Error deleting chat:', error));
   };
 
   const handleFileChange = (event) => {
@@ -121,14 +80,16 @@ const GroupChat = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      axios.post(`/api/courses/${selectedCourse}/upload`, formData)
-        .then(response => {
-          console.log('File uploaded:', response.data);
+      fetch(`http://localhost:4000/api/courses/${selectedCourse}/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('File uploaded:', data);
           setFile(null);
         })
-        .catch(error => {
-          console.error('Error uploading file:', error);
-        });
+        .catch(error => console.error('Error uploading file:', error));
     }
   };
 
@@ -154,9 +115,9 @@ const GroupChat = () => {
         <ul>
           {searchResults.map(course => (
             <li
-              key={course.id}
-              onClick={() => handleCourseClick(course.id)}
-              className={course.id === selectedCourse ? 'active-course' : ''}
+              key={course._id}
+              onClick={() => handleCourseClick(course._id)}
+              className={course._id === selectedCourse ? 'active-course' : ''}
             >
               {course.name}
             </li>

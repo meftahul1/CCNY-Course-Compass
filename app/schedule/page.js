@@ -48,11 +48,14 @@ const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
         <div className="flex flex-col justify-end gap-2 mt-auto self-stretch">
           <div className="flex justify-end gap-2 mt-4">
             <div className="flex items-center justify-center h-10 px-6 rounded-full border border-[#79747e] transition duration-300 hover:bg-[#65558f] cursor-pointer"
-            onClick={() => handleRemoveCourse(course._id)}
+                 onClick={() => handleRemoveCourse(course._id)}
             >
               <span className="text-sm text-[#65558f] hover:text-white">Delete</span>
             </div>
-            <div className="flex items-center justify-center h-10 px-6 rounded-full bg-[#65558f] transition duration-300 hover:bg-[#4a3d72] cursor-pointer">
+            <div
+              className="flex items-center justify-center h-10 px-6 rounded-full bg-[#65558f] transition duration-300 hover:bg-[#4a3d72] cursor-pointer"
+              onClick={() => window.location.href = '/chat'}
+            >
               <span className="text-sm text-white">Join Chat</span>
             </div>
           </div>
@@ -61,6 +64,7 @@ const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
     </div>
   );
 };
+
 
 const fetchData = async (apiPath, courseSearch, setSearchData) => {
   const params = {
@@ -96,12 +100,19 @@ export default function Page() {
   }, [courseSearch]);
 
   const handleSelectCourse = (course) => {
+    let joinedCourses = JSON.parse(localStorage.getItem('joinedCourses')) || [];
+    if (!joinedCourses.find(c => c._id === course._id)) {
+      joinedCourses.push(course);
+    }
+    localStorage.setItem('joinedCourses', JSON.stringify(joinedCourses));
+  
     if (!selectedCourses.find(c => c._id === course._id)) {
       setSelectedCourses(prevCourses => [...prevCourses, course]);
     }
     setCourseSearch('');
     setSearchData([]);
   };
+  
 
   const handleRemoveCourse = (courseId) => {
     setSelectedCourses(prevCourses => prevCourses.filter(course => course._id !== courseId));
