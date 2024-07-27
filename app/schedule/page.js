@@ -1,4 +1,3 @@
-
 'use client'
 import { useEffect, useState } from "react"
 
@@ -22,9 +21,8 @@ const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
           </div>
         </div>
         <div className="flex flex-col justify-center items-center gap-2.5 w-12 h-12 ml-auto">
-          <div
-            className="flex justify-center items-center p-2 rounded-full border border-[#ffffff] transition duration-300 hover:opacity-75 cursor-pointer"
-            onClick={() => handleShowModal(course)}
+          <div className="flex justify-center items-center p-2 rounded-full border border-[#ffffff] transition duration-300 hover:opacity-75 cursor-pointer"
+               onClick={() => handleShowModal(course)}
           >
             <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 20C11.45 20 10.9792 19.8042 10.5875 19.4125C10.1958 19.0208 10 18.55 10 18C10 17.45 10.1958 16.9792 10.5875 16.5875C10.9792 16.1958 11.45 16 12 16C12.55 16 13.0208 16.1958 13.4125 16.5875C13.8042 16.9792 14 17.45 14 18C14 18.55 13.8042 19.0208 13.4125 19.4125C13.0208 19.8042 12.55 20 12 20ZM12 14C11.45 14 10.9792 13.8042 10.5875 13.4125C10.1958 13.0208 10 12.55 10 12C10 11.45 10.1958 10.9792 10.5875 10.5875C10.9792 10.1958 11.45 10 12 10C12.55 10 13.0208 10.1958 13.4125 10.5875C13.8042 10.9792 14 11.45 14 12C14 12.55 13.8042 13.0208 13.4125 13.4125C13.0208 13.8042 12.55 14 12 14ZM12 8C11.45 8 10.9792 7.80417 10.5875 7.4125C10.1958 7.02083 10 6.55 10 6C10 5.45 10.1958 4.97917 10.5875 4.5875C10.9792 4.19583 11.45 4 12 4C12.55 4 13.0208 4.19583 13.4125 4.5875C13.8042 4.97917 14 5.45 14 6C14 6.55 13.8042 7.02083 13.4125 7.4125C13.0208 7.80417 12.55 8 12 8Z" fill="#49454F" />
@@ -36,26 +34,20 @@ const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
         <div className="text-lg font-medium text-[#1d1b20]">{course.professor}</div>
         <div className="text-sm text-[#49454f]">{course.rating}</div>
         <div className="text-sm text-[#49454f] mt-2">
-          {course.description ? (
-            <>
-              {showFullDescription ? course.description : truncateText(course.description, wordLimit)}
-              {course.description.split(' ').length > wordLimit && (
-                <button
-                  onClick={() => setShowFullDescription(!showFullDescription)}
-                  className="text-blue-500 hover:underline ml-2"
-                >
-                  {showFullDescription ? 'Show Less' : 'Find More'}
-                </button>
-              )}
-            </>
-          ) : (
-            <p>No description available</p>
+          {showFullDescription ? course.description : truncateText(course.description, wordLimit)}
+          {course.description.split(' ').length > wordLimit && (
+            <button
+              onClick={() => setShowFullDescription(!showFullDescription)}
+              className="text-blue-500 hover:underline ml-2"
+            >
+              {showFullDescription ? 'Show Less' : 'Find More'}
+            </button>
           )}
         </div>
         <div className="flex flex-col justify-end gap-2 mt-auto self-stretch">
           <div className="flex justify-end gap-2 mt-4">
             <div className="flex items-center justify-center h-10 px-6 rounded-full border border-[#79747e] transition duration-300 hover:bg-[#65558f] cursor-pointer"
-            onClick={() => handleRemoveCourse(course._id)}
+                 onClick={() => handleRemoveCourse(course._id)}
             >
               <span className="text-sm text-[#65558f] hover:text-white">Delete</span>
             </div>
@@ -94,42 +86,12 @@ const fetchData = async (apiPath, courseSearch, setSearchData) => {
   }
 };
 
-const fetchUserInfo = async (userid, apiPath) => {
-  const fetchedData = await fetch(apiPath + 'get-user-info', {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userID: userid })
-  });
-  const userData = await fetchedData.json();
-  return userData;
-};
-
 export default function Page() {
   const apiPath = "http://localhost:4000/";
-  const [userid, setUserID] = useState(null);
-  useEffect(() => {
-    const fetchedID = sessionStorage.getItem('user');
-    if (fetchedID) {
-      setUserID(sessionStorage.getItem('user'))
-    }
-  }, [])
   const [courseSearch, setCourseSearch] = useState('');
   const [searchData, setSearchData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedCourses, setSelectedCourses] = useState([]);
-  useEffect(() => {
-    const fetchUserCourses = async () => {
-      if (userid) {
-        const userData = await fetchUserInfo(userid, apiPath);
-        console.log(userData);
-        setSelectedCourses(userData.courses || []);
-      }
-    };
-    fetchUserCourses();
-  }, [userid]);
-
   const [modalData, setModalData] = useState(null);
 
   useEffect(() => {
@@ -144,21 +106,7 @@ export default function Page() {
     localStorage.setItem('joinedCourses', JSON.stringify(joinedCourses));
   
     if (!selectedCourses.find(c => c._id === course._id)) {
-      //console.log(course)
       setSelectedCourses(prevCourses => [...prevCourses, course]);
-      const params = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: userid})
-      };
-      //console.log(course._id)
-      console.log(userid)
-      fetch(apiPath + `add-user-course/${course._id}`, params).
-      then(response => console.log(response)).
-      then(data => console.log(data)).
-      catch(err => console.log(err))
     }
     setCourseSearch('');
     setSearchData([]);
