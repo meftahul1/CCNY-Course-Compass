@@ -17,7 +17,7 @@ app.use(
     cors({
       methods: 'GET,POST,PUT,DELETE',
       credentials: true,
-      exposedHeaders: ['set-cookie'],
+      origin: '*'
     })
   );
   
@@ -89,7 +89,7 @@ app.get('/courses/:courseID', async (req, res) => {
 
 app.post('/course-details', async (req, res) => {
     const name = req.body.name;
-    const courses = await findRelatedCourses(name);
+    const courses = await findRelatedCourses(name.toLowerCase());
     //const data = Object.assign({}, courses)
     res.json(courses);
 });
@@ -155,17 +155,18 @@ app.get('/average-rating/:courseID', async (req, res) => {
 });
 
 app.post('/add-user-course/:courseID', async (req, res) => {
-    const userID = req.body.userID;
+    const userID = req.body.userId;
+    console.log(userID) 
     const courseID = req.params.courseID;
-
+    
     try {
-        const course = await Courses.findById(courseID);
+        const course = await Courses.findOne({"Course._id": courseID});
         if (!course) {
             return res.status(404).json({ message: 'Course not found' });
         }
         const user = await Users.findOne({"userID": userID});
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found'});
         }
         user.courses.push(courseID);
         user.save();
@@ -316,7 +317,8 @@ async function findRelatedCourses(name) {
     const relatedCourses = [];
     const dbCourses = await Courses.find({});
     dbCourses.forEach(course => {
-        if (course.Course['name'].includes(name)) {
+        const courseName = course.Course['name'].toLowerCase();
+        if (courseName.includes(name)) {
             relatedCourses.push(course.Course)
         }
     });

@@ -12,15 +12,15 @@ const Nav = () => {
 
     useEffect(() => {
         const storedUser = sessionStorage.getItem('user');
-        setUser(JSON.parse(storedUser));
+        if (storedUser) {
+            setUser(storedUser);
+        }
     }, []);
 
     const handleSignOut = () => {
         sessionStorage.removeItem('user');
         setUser(null);
-        // Add any additional sign-out logic here
         router.push('/');
-        
     };
 
     return (

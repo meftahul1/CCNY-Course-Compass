@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const Login = () => {
-
   const [error, setError] = useState('');
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -35,9 +34,11 @@ const Login = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        sessionStorage.setItem('user', JSON.stringify({ userID: data.userID }));
+        console.log(data);
+        sessionStorage.setItem('user', data.userID);
         console.log('user signed in successfully');
         router.push("/schedule");
+        router.refresh(); // Add this line to force a re-render
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Error logging in user');
