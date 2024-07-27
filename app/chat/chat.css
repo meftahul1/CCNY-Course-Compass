@@ -1,6 +1,6 @@
 .chat-container {
     display: flex;
-    height: 80vh; /* Adjust this value as needed */
+    height: 80vh; 
   }
   
   .course-list {
@@ -17,12 +17,12 @@
   }
   
   .logo {
-    height: 40px; /* Adjust the size as needed */
+    height: 40px; 
     margin-right: 10px;
   }
   
   .logo-text {
-    font-size: 18px; /* Adjust the font size as needed */
+    font-size: 18px; 
     font-weight: bold;
   }
   
@@ -54,7 +54,7 @@
   
   .chat-header {
     display: flex;
-    justify-content: space-between; /* This ensures the space between title and button */
+    justify-content: space-between; 
     align-items: center;
     padding: 10px;
     background-color: #e5e5e5;
@@ -62,6 +62,7 @@
   }
   
   .chat-title {
+    position: relative;
     flex-grow: 1;
   }
   
@@ -69,7 +70,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    margin-left: auto; /* Ensure the button aligns to the right */
+    margin-left: auto; 
   }
   
   .dropdown-btn {
@@ -84,7 +85,7 @@
     flex-direction: column;
     position: absolute;
     right: 0;
-    top: 24px; /* Position it right under the button */
+    top: 100%; 
     background-color: white;
     min-width: 100px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
@@ -106,9 +107,9 @@
   .messages-container {
     flex: 1;
     padding: 10px;
-    overflow-y: auto; /* Ensure scrolling for long messages */
+    overflow-y: auto; 
     background-color: #e6f7ff;
-    max-height: 60vh; /* Adjust this value as needed */
+    max-height: 60vh; 
   }
   
   .message {
@@ -164,7 +165,7 @@
   }
   
   .file-input-container input[type="file"] {
-    display: none; /* Hide the file input */
+    display: none; 
   }
   
   .file-input-label {
@@ -173,8 +174,8 @@
   }
   
   .file-input-label img, .upload-btn img {
-    width: 24px; /* Adjust the size as needed */
-    height: 24px; /* Adjust the size as needed */
+    width: 24px; 
+    height: 24px; 
     margin-right: 10px;
   }
   
@@ -182,35 +183,4 @@
     background: none;
     border: none;
     cursor: pointer;
-  }
-
-  /* Add this to chat.css */
-.dropdown-content {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 0;
-    top: 100%; /* Position it right under the button */
-    background-color: white;
-    min-width: 100px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-  }
-  
-  .dropdown-content button {
-    padding: 8px 16px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    text-align: left;
-  }
-  
-  .dropdown-content button:hover {
-    background-color: #f1f1f1;
-  }
-  
-  /* Ensure the parent container has relative positioning */
-  .chat-title {
-    position: relative; /* Add this line */
-    flex-grow: 1;
-  }
+  } 

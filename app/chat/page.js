@@ -50,7 +50,7 @@ const GroupChat = () => {
     if (newMessage.trim() !== '') {
       const updatedMessages = [...messages, { user: 'John', message: newMessage, sender: 'me' }];
       setMessages(updatedMessages);
-      dummyMessages[selectedCourse] = updatedMessages; // Update the dummy data
+      dummyMessages[selectedCourse] = updatedMessages; // Update dummy data
       setNewMessage('');
     }
   };
@@ -75,7 +75,6 @@ const GroupChat = () => {
 
   const handleUpload = () => {
     if (file) {
-      // Handle file upload here (e.g., send to server or add to messages)
       console.log('File uploaded:', file.name);
       setFile(null);
     }
@@ -145,13 +144,13 @@ const GroupChat = () => {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress} // Add this line
+              onKeyPress={handleKeyPress} 
               placeholder="Type a message"
               className="message-input"
             />
             <div className="file-input-container">
               <label htmlFor="file-upload" className="file-input-label">
-                <img src="/assets/icons/clip.png" alt="Upload" /> {/* Ensure this path is correct */}
+                <img src="/assets/icons/clip.png" alt="Upload" /> {}
               </label>
               <input
                 type="file"
