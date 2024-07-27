@@ -35,6 +35,7 @@ const Login = () => {
       });
       if (response.ok) {
         const data = await response.json();
+        sessionStorage.setItem('user', JSON.stringify({ userID: data.userID }));
         console.log('user signed in successfully');
         router.push("/schedule");
       } else {
