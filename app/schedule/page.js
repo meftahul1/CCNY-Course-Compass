@@ -98,6 +98,12 @@ export default function Page() {
     fetchData(apiPath, courseSearch, setSearchData);
   }, [courseSearch]);
 
+  // Add this useEffect to load courses from localStorage when the page loads
+  useEffect(() => {
+    const savedCourses = JSON.parse(localStorage.getItem('selectedCourses')) || [];
+    setSelectedCourses(savedCourses);
+  }, []);
+
   const handleSelectCourse = (course) => {
     let joinedCourses = JSON.parse(localStorage.getItem('joinedCourses')) || [];
     if (!joinedCourses.find(c => c._id === course._id)) {
@@ -106,16 +112,22 @@ export default function Page() {
     localStorage.setItem('joinedCourses', JSON.stringify(joinedCourses));
   
     if (!selectedCourses.find(c => c._id === course._id)) {
-      setSelectedCourses(prevCourses => [...prevCourses, course]);
+      const updatedCourses = [...selectedCourses, course];
+      setSelectedCourses(updatedCourses);
+      localStorage.setItem('selectedCourses', JSON.stringify(updatedCourses));
     }
     setCourseSearch('');
     setSearchData([]);
   };
   
+  
 
   const handleRemoveCourse = (courseId) => {
-    setSelectedCourses(prevCourses => prevCourses.filter(course => course._id !== courseId));
+    const updatedCourses = selectedCourses.filter(course => course._id !== courseId);
+    setSelectedCourses(updatedCourses);
+    localStorage.setItem('selectedCourses', JSON.stringify(updatedCourses));
   };
+  
 
   const handleShowModal = (course) => {
     setModalData(course);
