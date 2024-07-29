@@ -46,10 +46,10 @@ const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
         </div>
         <div className="flex flex-col justify-end gap-2 mt-auto self-stretch">
           <div className="flex justify-end gap-2 mt-4">
-            <div className="flex items-center justify-center h-10 px-6 rounded-full border border-[#79747e] transition duration-300 hover:bg-[#65558f] cursor-pointer"
+            <div className="group flex items-center justify-center h-10 px-6 rounded-full border border-[#79747e] transition duration-300 hover:bg-[#65558f] cursor-pointer"
                  onClick={() => handleRemoveCourse(course._id)}
             >
-              <span className="text-sm text-[#65558f] hover:text-white">Delete</span>
+              <span className="text-sm text-[#65558f] group-hover:text-white">Delete</span>
             </div>
             <div
               className="flex items-center justify-center h-10 px-6 rounded-full bg-[#65558f] transition duration-300 hover:bg-[#4a3d72] cursor-pointer"
@@ -129,7 +129,7 @@ export default function Page() {
 
   return (
     <>
-      <label className="block mb-8 text-sm font-medium text-gray-900">
+      <div className="block mb-8 text-sm font-medium text-gray-900 relative">
         <h1 className="font-bold text-xl">Enter Course Name to Get Started</h1>
         <input
           type="text"
@@ -138,21 +138,21 @@ export default function Page() {
           onChange={(e) => setCourseSearch(e.target.value)}
           className="mt-8 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
-      </label>
 
-      {searchData.length > 0 && (
-        <ul className="absolute z-10 w-30 max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg transition-transform duration-300 ease-in-out transform scale-95 hover:scale-100 mt-1">
-          {searchData.map(course => (
-            <li
-              key={course._id}
-              onClick={() => handleSelectCourse(course)}
-              className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-            >
-              {course.name}
-            </li>
-          ))}
-        </ul>
-      )}
+        {searchData.length > 0 && (
+          <ul className="absolute z-10 w-full max-h-60 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+            {searchData.map(course => (
+              <li
+                key={course._id}
+                onClick={() => handleSelectCourse(course)}
+                className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+              >
+                {course.name}
+              </li>
+            ))}
+          </ul>
+        )}
+        </div>
 
       <div className="flex flex-wrap gap-4 p-4">
         {selectedCourses.length > 0 ? (
