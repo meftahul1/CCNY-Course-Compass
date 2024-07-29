@@ -88,6 +88,13 @@ const fetchData = async (apiPath, courseSearch, setSearchData) => {
 
 export default function Page() {
   const apiPath = "http://localhost:4000/";
+  const [userid, setUserID] = useState(null);
+  useEffect(() => {
+    const fetchedID = sessionStorage.getItem('user');
+    if (fetchedID) {
+      setUserID(sessionStorage.getItem('user'))
+    }
+  }, [])
   const [courseSearch, setCourseSearch] = useState('');
   const [searchData, setSearchData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -116,6 +123,19 @@ export default function Page() {
       setSelectedCourses(updatedCourses);
       localStorage.setItem('selectedCourses', JSON.stringify(updatedCourses));
     }
+    const params = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: userid})
+    };
+    console.log(userid)
+    fetch(apiPath + `add-user-course/${course._id}`, params).
+    then(response => console.log(response)).
+    then(data => console.log(data)).
+    catch(err => console.log(err))
+
     setCourseSearch('');
     setSearchData([]);
   };
