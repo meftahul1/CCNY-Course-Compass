@@ -33,6 +33,8 @@ module.exports = {
       },
       colors: {
         'primary-orange': '#FF5722',
+        'rmp-green': '#86efac',
+        'rmp-red': '#f87171'
       }
     },
   },

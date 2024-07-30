@@ -17,7 +17,7 @@ const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
         <div className="content flex items-center">
           <div className="text flex flex-col items-start">
             <div className="text-lg font-medium text-[#1d1b20]">{course.code}</div>
-            <div className="text-sm text-[#1d1b20]">{course.name}</div>
+            <div className="text-sm text-[#1d1b20] font-bold">{course.name}</div>
           </div>
         </div>
         <div className="flex flex-col justify-center items-center gap-2.5 w-12 h-12 ml-auto">
@@ -228,21 +228,29 @@ export default function Page() {
             <p><strong>Course Credits: </strong>{modalData.credits}</p>
             <p><strong>Enrollment Period: </strong>{modalData.enrollmentPeriod}</p>
             <p><strong>Instructor: </strong>{modalData.instructor}</p>
-            <p><strong>Ratings: </strong>{modalData.ratings.ratingTotal} (Total Ratings: {modalData.ratings.ratingCount})</p>
             {rmpData && (
+
               <div className="mt-4">
-                <h3 className="text-md font-semibold">RMP Details</h3>
-                <p><strong>Department: </strong>{rmpData.department ? rmpData.department : "No data available"}</p>
-                <p><strong>Average Difficulty: </strong>{rmpData.avgDifficulty ? rmpData.avgDifficulty : "No data available"}</p>
-                <p><strong>Average Rating: </strong>{rmpData.avgRating ? rmpData.avgRating : "No data available" }</p>
+                <h3 className="text-md font-semibold text-center mb-2">Professor's Ratings</h3>
+                <div className="flex justify-center space-x-4">
+                    <div className="flex-1 bg-rmp-red p-4 rounded text-center">
+                        <p><strong>Difficulty: </strong>{rmpData.avgDifficulty ? rmpData.avgDifficulty : "N/A"}</p>
+                    </div>
+                    <div className="flex-1 bg-rmp-green p-4 rounded text-center">
+                        <p><strong>Rating: </strong>{rmpData.avgRating ? rmpData.avgRating : "N/A"}</p>
+                    </div>
+                </div>
               </div>
+          
             )}
-            <button
-              onClick={handleCloseModal}
-              className="mt-4 px-4 py-2 bg-[#65558f] text-white rounded-md"
-            >
-              Close
-            </button>
+            <div className="mt-4 flex justify-center">
+                <button
+                    onClick={handleCloseModal}
+                    className="px-4 py-2 bg-[#6b589c] text-white rounded-md transition duration-300 hover:bg-[#5a4a84]"
+                >
+                    Close
+                </button>
+            </div>
           </div>
         </div>
       )}
