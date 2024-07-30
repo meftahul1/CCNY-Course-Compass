@@ -55,12 +55,20 @@ const GroupChat = () => {
   };
 
   const handleDeleteChat = () => {
-    const updatedCourses = searchResults.filter(course => course._id !== selectedCourse);
-    setSearchResults(updatedCourses);
-    localStorage.setItem('joinedCourses', JSON.stringify(updatedCourses)); // Update localStorage
-    setMessages([]);
-    setSelectedCourse(null);
-    setShowDropdown(false);
+    fetch(`http://localhost:4000/delete-user-course/${selectedCourse}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userID: 'your_user_id' }), // Update userID accordingly
+    })
+      .then(() => {
+        setMessages([]);
+        setSearchResults(searchResults.filter(course => course._id !== selectedCourse));
+        setSelectedCourse(null);
+        setShowDropdown(false);
+      })
+      .catch(error => console.error('Error deleting chat:', error));
   };
 
   const handleFileChange = (event) => {
@@ -94,6 +102,7 @@ const GroupChat = () => {
     <div className="chat-container">
       <div className="course-list">
         <div className="logo-container">
+          {/* <img src="/assets/icons/icon.png" alt="Course Compass @ CCNY" className="logo" /> */}
           <h3 className="logo-text">Course Compass</h3>
         </div>
         <input
@@ -132,7 +141,7 @@ const GroupChat = () => {
         <div className="messages-container">
           {messages && messages.length > 0 ? (
             messages.map((msg, index) => (
-              <div key={index} className={`message ${msg.sender === 'John' ? 'me' : 'other'}`}>
+              <div key={index} className={`message ${msg.sender}`}>
                 <div className="message-content">
                   <strong>{msg.user}:</strong> {msg.message}
                 </div>
@@ -148,7 +157,7 @@ const GroupChat = () => {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyPress={handleKeyPress} 
               placeholder="Type a message"
               className="message-input"
             />
