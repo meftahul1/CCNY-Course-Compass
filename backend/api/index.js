@@ -215,16 +215,17 @@ app.post('/get-user-info', async (req, res) => {
 });
 
 app.post('/rmp-details/', async (req, res) => {
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
+    const professorName = req.body.professorName;
     const dbRatings = await RMP.find({});
-    let rating = None
+    const names = professorName.split(' ')
+    let rating;
     dbRatings.forEach(rmp => {
-        if (rmp.firstName == firstName && rmp.lastName == lastName) {
+        if (rmp.firstName.toLowerCase() == names[0].toLowerCase() && rmp.lastName.toLowerCase() == names[names.length-1].toLowerCase()) {
+            console.log(rmp)
             rating = rmp;
         }
     });
-    if (rating == None) {
+    if (!rating) {
         res.status(404).json({ message: 'Rating not found' });
     } else {
         res.json(rating);

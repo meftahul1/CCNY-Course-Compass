@@ -64,7 +64,6 @@ const CourseCard = ({ course, handleRemoveCourse, handleShowModal }) => {
   );
 };
 
-
 const fetchData = async (apiPath, courseSearch, setSearchData) => {
   const params = {
     method: "POST",
@@ -86,6 +85,26 @@ const fetchData = async (apiPath, courseSearch, setSearchData) => {
   }
 };
 
+const fetchRmpData = async (apiPath, professorName, setRmpData) => {
+  const params = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ professorName })
+  };
+  try {
+    console.log(professorName)
+    const response = await fetch(apiPath + "rmp-details/", params);
+    console.log(response)
+    const data = await response.json();
+    console.log(data)
+    setRmpData(data);
+  } catch (error) {
+    console.error('Error fetching RMP data:', error);
+  }
+};
+
 export default function Page() {
   const apiPath = "http://localhost:4000/";
   const [userid, setUserID] = useState(null);
@@ -100,6 +119,7 @@ export default function Page() {
   const [showModal, setShowModal] = useState(false);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [modalData, setModalData] = useState(null);
+  const [rmpData, setRmpData] = useState(null);
 
   useEffect(() => {
     fetchData(apiPath, courseSearch, setSearchData);
@@ -139,24 +159,23 @@ export default function Page() {
     setCourseSearch('');
     setSearchData([]);
   };
-  
-  
 
   const handleRemoveCourse = (courseId) => {
     const updatedCourses = selectedCourses.filter(course => course._id !== courseId);
     setSelectedCourses(updatedCourses);
     localStorage.setItem('selectedCourses', JSON.stringify(updatedCourses));
   };
-  
 
-  const handleShowModal = (course) => {
+  const handleShowModal = async (course) => {
     setModalData(course);
     setShowModal(true);
+    await fetchRmpData(apiPath, course.instructor, setRmpData);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setModalData(null);
+    setRmpData(null);
   };
 
   return (
@@ -184,7 +203,7 @@ export default function Page() {
             ))}
           </ul>
         )}
-        </div>
+      </div>
 
       <div className="flex flex-wrap gap-4 p-4">
         {selectedCourses.length > 0 ? (
@@ -210,6 +229,14 @@ export default function Page() {
             <p><strong>Enrollment Period: </strong>{modalData.enrollmentPeriod}</p>
             <p><strong>Instructor: </strong>{modalData.instructor}</p>
             <p><strong>Ratings: </strong>{modalData.ratings.ratingTotal} (Total Ratings: {modalData.ratings.ratingCount})</p>
+            {rmpData && (
+              <div className="mt-4">
+                <h3 className="text-md font-semibold">RMP Details</h3>
+                <p><strong>Department: </strong>{rmpData.department ? rmpData.department : "No data available"}</p>
+                <p><strong>Average Difficulty: </strong>{rmpData.avgDifficulty ? rmpData.avgDifficulty : "No data available"}</p>
+                <p><strong>Average Rating: </strong>{rmpData.avgRating ? rmpData.avgRating : "No data available" }</p>
+              </div>
+            )}
             <button
               onClick={handleCloseModal}
               className="mt-4 px-4 py-2 bg-[#65558f] text-white rounded-md"
