@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './chat.css';
 
 const GroupChat = () => {
@@ -10,6 +10,12 @@ const GroupChat = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [file, setFile] = useState(null);
+  const messagesEndRef = useRef(null);
+
+  const getUsername = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user && user.username ? user.name : 'Anonymous'
+  }
 
   useEffect(() => {
     const joinedCourses = JSON.parse(localStorage.getItem('joinedCourses')) || [];
@@ -25,13 +31,17 @@ const GroupChat = () => {
     }
   }, [selectedCourse]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const handleCourseClick = (courseId) => {
     setSelectedCourse(courseId);
   };
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
-      const messageData = { username: 'John', message: newMessage, courseID: selectedCourse };
+      const messageData = { username: getUsername(), message: newMessage, courseID: selectedCourse };
       fetch('http://localhost:4000/add-message', {
         method: 'POST',
         headers: {
@@ -99,10 +109,9 @@ const GroupChat = () => {
   };
 
   return (
-    <div className="chat-container">
-      <div className="course-list">
+    <div className="chat-app">
+      <aside className="sidebar">
         <div className="logo-container">
-          {/* <img src="/assets/icons/icon.png" alt="Course Compass @ CCNY" className="logo" /> */}
           <h3 className="logo-text">Course Compass</h3>
         </div>
         <input
@@ -112,7 +121,7 @@ const GroupChat = () => {
           value={courseSearch}
           onChange={(e) => setCourseSearch(e.target.value)}
         />
-        <ul>
+        <ul className="course-list">
           {searchResults.map(course => (
             <li
               key={course._id}
@@ -123,33 +132,32 @@ const GroupChat = () => {
             </li>
           ))}
         </ul>
-      </div>
-      <div className="chat-area">
-        <div className="chat-header">
-          <div className="chat-title">
-            <h3>{getSelectedCourseName()}</h3>
-            <button onClick={() => setShowDropdown(!showDropdown)} className="dropdown-btn">
-              ...
-            </button>
-            {showDropdown && (
-              <div className="dropdown-content">
-                <button onClick={handleDeleteChat}>Delete Chat</button>
-              </div>
-            )}
-          </div>
-        </div>
+      </aside>
+      <main className="chat-area">
+        <header className="chat-header">
+          <h3>{getSelectedCourseName()}</h3>
+          <button onClick={() => setShowDropdown(!showDropdown)} className="dropdown-btn">
+            ...
+          </button>
+          {showDropdown && (
+            <div className="dropdown-content">
+              <button onClick={handleDeleteChat}>Delete Chat</button>
+            </div>
+          )}
+        </header>
         <div className="messages-container">
           {messages && messages.length > 0 ? (
             messages.map((msg, index) => (
-              <div key={index} className={`message ${msg.sender}`}>
+              <div key={index} className={`message ${msg.sender === 'John' ? 'me' : 'other'}`}>
                 <div className="message-content">
-                  <strong>{msg.user}:</strong> {msg.message}
+                  {msg.sender !== 'John' && <strong>{msg.sender}:</strong>} {msg.message}
                 </div>
               </div>
             ))
           ) : (
-            <p>No messages in this chat.</p>
+            <p className="no-messages">No messages in this chat.</p>
           )}
+          <div ref={messagesEndRef} />
         </div>
         {selectedCourse && (
           <div className="message-input-container">
@@ -157,24 +165,20 @@ const GroupChat = () => {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress} 
+              onClick={handleKeyPress}
               placeholder="Type a message"
               className="message-input"
             />
             <div className="file-input-container">
               <label htmlFor="file-upload" className="file-input-label">
-                <img src="/assets/icons/clip.png" alt="Upload" /> {}
+                <img src="/assets/icons/clip.png" alt="Upload" />
               </label>
-              <input
-                type="file"
-                id="file-upload"
-                onChange={handleFileChange}
-              />
+              
             </div>
             <button onClick={handleSendMessage} className="send-btn">Send</button>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

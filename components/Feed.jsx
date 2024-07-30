@@ -40,7 +40,7 @@ const Feed = () => {
             </div>
             <div className='p-6 hover:scale-105 ease-in duration-300'>
               <div className='flex flex-col items-center justify-center'>
-                <h3 className='mt-4 font-bold text-center'>Courses</h3>
+                <h3 className='mt-4 font-bold text-center'>Syllabus</h3>
                 <p className='text-gray-500 text-sm text-center hidden sm:block mt-2'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
               </div>
             </div>
