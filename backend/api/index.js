@@ -307,8 +307,8 @@ app.get('/get-messages/:courseID', async (req, res) => {
     return res.status(200).json(chat.messages);
 });
 
-const PORT = 4000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 })
 

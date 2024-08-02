@@ -19,13 +19,13 @@ const Profile = () => {
                 </div>
                 <h1 className="text-darken mb-3 text-xl font-medium lg:px-14">Feedback on Course</h1>
                 <p className="px-4 text-gray-500">Share your experience on a particular course</p>
-                <Link href="/chat" className='mt-4 inline-block rounded bg-teal-500 px-6 py-2 text-white shadow hover:bg-teal-600'>
-                    Chat
+                <Link href="/feedback" className='mt-4 inline-block rounded bg-teal-500 px-6 py-2 text-white shadow hover:bg-teal-600'>
+                    Feedback
                 </Link>
             </div>
             <div data-aos-delay="150" className="rounded-xl bg-white p-6 text-center shadow-xl">
             <div
-                className="mx-auto flex h-16 w-16 -translate-y-12 transform items-center justify-center rounded-full shadow-lg bg-rose-500 shadow-rose-500/40">
+                className="mx-auto flex h-16 w-16 -translate-y-12 transform items-center justify-center rounded-full shadow-lg bg-vio shadow-vio">
                 <svg viewBox=" 0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white">
                 <path
                 d="M12 0C11.0532 0 10.2857 0.767511 10.2857 1.71432V5.14285H13.7142V1.71432C13.7142 0.767511 12.9467 0 12 0Z"
@@ -67,7 +67,7 @@ const Profile = () => {
             </div>
             <h1 className="text-darken mb-3 text-xl font-medium lg:px-14 ">Schedule</h1>
             <p className="px-4 text-gray-500">All of your courses, All in one place. Add or Delete Course on Schedule</p>
-            <Link href="/schedule" className='mt-4 inline-block rounded bg-rose-500 px-6 py-2 text-white shadow hover:bg-rose-600'>
+            <Link href="/schedule" className='mt-4 inline-block rounded bg-vio px-6 py-2 text-white shadow hover:bg-vio-dark'>
                     Schedule
                 </Link>
             </div>
@@ -82,8 +82,8 @@ const Profile = () => {
             </div>
             <h1 className="text-darken mb-3 pt-2 text-xl font-medium lg:px-14">Access Group Chats</h1>
             <p className="px-4 text-gray-500">Find and Access Chats that you have joined before</p>
-            <Link href="/feedback" className='mt-4 inline-block rounded bg-sky-500 px-6 py-2 text-white shadow hover:bg-sky-600'>
-                    Feedback
+            <Link href="/chat" className='mt-4 inline-block rounded bg-sky-500 px-6 py-2 text-white shadow hover:bg-sky-600'>
+                    Chat
                 </Link>
             </div>
         </div>
